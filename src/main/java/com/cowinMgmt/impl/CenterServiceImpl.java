@@ -24,4 +24,13 @@ public class CenterServiceImpl implements CenterServiceApi {
 
          return centerList;
     }
+
+    @Override
+    public List<Center> getCenterListByPinCode(String pinCode) throws Exception {
+        List<Center> centerList;
+
+        centerList = centerRepository.findByPinCode(pinCode);
+
+        return centerList;
+    }
 }

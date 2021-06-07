@@ -7,4 +7,6 @@ import java.util.List;
 public interface CenterServiceApi {
     List<Center> getCenterList(String pinCode, String stateName,
                                String districtName, String blockName) throws Exception;
+
+    List<Center> getCenterListByPinCode(String pinCode) throws Exception;
 }
