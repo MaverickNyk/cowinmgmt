@@ -18,14 +18,37 @@ public class CenterResource {
     @Autowired
     CenterServiceApi centerServiceApi;
 
+    @GetMapping("/centers{pinCode}")
+    @ResponseBody
+    public ResponseEntity<Object> getCentersByPinCode(@RequestParam(required = false) String pinCode,
+                                             @RequestParam(required = false) String stateName,
+                                             @RequestParam(required = false) String districtName,
+                                             @RequestParam(required = false) String blockName,
+                                             @RequestParam(required = false, defaultValue = "20") String limit,
+                                             @RequestParam(required = false, defaultValue = "0") String offset) {
+        try {
+            validateRequestParams(pinCode);
+            List<Center> centers = centerServiceApi.getCenterListByPinCode(pinCode);
+            return ResponseEntity.status(HttpStatus.OK).body(centers);
+        }
+        catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(ex.getMessage());
+        }
+    }
+
     @GetMapping("/centers")
     @ResponseBody
     public ResponseEntity<Object> getCenters(@RequestParam(required = false) String pinCode,
                                              @RequestParam(required = false) String stateName,
                                              @RequestParam(required = false) String districtName,
-                                             @RequestParam(required = false) String blockName) {
+                                             @RequestParam(required = false) String blockName,
+                                             @RequestParam(required = false, defaultValue = "20") String limit,
+                                             @RequestParam(required = false, defaultValue = "0") String offset) {
         try {
-            validateRequestParams(pinCode, stateName, districtName, blockName);
+            validateRequestParams(pinCode);
+            validateRequestParams(stateName);
+            validateRequestParams(districtName);
+            validateRequestParams(blockName);
             List<Center> centers = centerServiceApi.getCenterList(pinCode, stateName, districtName, blockName);
             return ResponseEntity.status(HttpStatus.OK).body(centers);
         }
@@ -35,12 +58,8 @@ public class CenterResource {
     }
 
 
-    private void validateRequestParams(String pinCode, String stateName,
-                                       String districtName, String blockName) throws IllegalArgumentException {
-        if (Strings.isNullOrEmpty(pinCode)
-                && Strings.isNullOrEmpty(districtName)
-                && Strings.isNullOrEmpty(stateName)
-                && Strings.isNullOrEmpty(blockName)) {
+    private void validateRequestParams(String input) throws IllegalArgumentException {
+        if (Strings.isNullOrEmpty(input)){
             throw new IllegalArgumentException("Invalid input parameters");
         }
     }
