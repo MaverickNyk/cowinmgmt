@@ -20,12 +20,7 @@ public class CenterResource {
 
     @GetMapping("/centers{pinCode}")
     @ResponseBody
-    public ResponseEntity<Object> getCentersByPinCode(@RequestParam(required = false) String pinCode,
-                                             @RequestParam(required = false) String stateName,
-                                             @RequestParam(required = false) String districtName,
-                                             @RequestParam(required = false) String blockName,
-                                             @RequestParam(required = false, defaultValue = "20") String limit,
-                                             @RequestParam(required = false, defaultValue = "0") String offset) {
+    public ResponseEntity<Object> getCentersByPinCode(@PathVariable("pinCode") String pinCode) {
         try {
             validateRequestParams(pinCode);
             List<Center> centers = centerServiceApi.getCenterListByPinCode(pinCode);
